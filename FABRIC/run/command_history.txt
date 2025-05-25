@@ -1,0 +1,12 @@
+/gamemode survival
+/gamemode creative
+/reload
+/gamemode survival
+/reload
+/give dev minecraft:crafting_table
+/give @a minecraft:crafting_table
+/give @a minecraft:gold_ingot 64
+/give @a minecraft:dispenser 64
+/gamemode survival
+/give @a simple_lucky_block:lucky_block 32
+/reload

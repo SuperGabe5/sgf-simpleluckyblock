@@ -1,0 +1,46 @@
+{
+  "feature": "simple_lucky_block:lucky_block_configured",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 150
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "WORLD_SURFACE_WG"
+    },
+    {
+      "type": "minecraft:environment_scan",
+      "direction_of_search": "down",
+      "max_steps": 10,
+      "target_condition": {
+        "type": "minecraft:matching_blocks",
+        "blocks": [
+          "minecraft:grass_block",
+          "minecraft:dirt",
+          "minecraft:stone",
+          "minecraft:sand",
+          "minecraft:gravel",
+          "minecraft:snow_block",
+          "minecraft:podzol",
+          "minecraft:coarse_dirt",
+          "minecraft:mycelium"
+        ]
+      }
+    },
+    {
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "minecraft:matching_blocks",
+        "blocks": "minecraft:air",
+        "offset": [0, 1, 0]
+      }
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+} 
