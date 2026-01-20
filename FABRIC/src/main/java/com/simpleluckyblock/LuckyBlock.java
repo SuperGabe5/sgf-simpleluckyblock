@@ -14,7 +14,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.util.DyeColor;
+//import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
@@ -58,7 +58,7 @@ public class LuckyBlock extends Block {
         // Play sad villager sound
         world.playSound(null, pos, SoundEvents.ENTITY_VILLAGER_NO, SoundCategory.BLOCKS, 1.0f, 0.8f);
         
-        int unluckyType = random.nextInt(5);
+        int unluckyType = random.nextInt(6);
         
         switch (unluckyType) {
             case 0: // Dirt Drop (20%)
@@ -70,11 +70,11 @@ public class LuckyBlock extends Block {
                     2.5f, World.ExplosionSourceType.BLOCK);
                 break;
                 
-            case 2: // Rotten Food (20%)
+            case 2: // Rotten Flesh and Useless Tools (20%)
                 dropItems(world, pos, 
                     new ItemStack(Items.ROTTEN_FLESH, random.nextInt(8) + 3),
-                    new ItemStack(Items.SPIDER_EYE, random.nextInt(3) + 1),
-                    new ItemStack(Items.POISONOUS_POTATO, random.nextInt(4) + 2)
+                    new ItemStack(Items.GOLDEN_SWORD),
+                    new ItemStack(Items.GOLDEN_HOE)
                 );
                 break;
                 
@@ -119,17 +119,17 @@ public class LuckyBlock extends Block {
                     new ItemStack(Items.STONE_PICKAXE),
                     new ItemStack(Items.STONE_AXE),
                     new ItemStack(Items.STONE_SHOVEL),
-                    new ItemStack(Items.STONE_HOE)
+                    new ItemStack(Items.SHEARS)
                 );
                 break;
                 
             case 2: // Complete gold tool set
                 dropItems(world, pos,
-                    new ItemStack(Items.GOLDEN_SWORD),
+                    new ItemStack(Items.RAW_GOLD, 8),
                     new ItemStack(Items.GOLDEN_PICKAXE),
                     new ItemStack(Items.GOLDEN_AXE),
                     new ItemStack(Items.GOLDEN_SHOVEL),
-                    new ItemStack(Items.GOLDEN_HOE)
+                    new ItemStack(Items.GOLD_INGOT, 2)
                 );
                 break;
                 
@@ -151,12 +151,13 @@ public class LuckyBlock extends Block {
                 );
                 break;
                 
-            case 5: // 2-3 iron armor pieces
+            case 5: // 2-3 rare items
                 List<ItemStack> ironArmor = List.of(
-                    new ItemStack(Items.IRON_HELMET),
-                    new ItemStack(Items.IRON_CHESTPLATE),
-                    new ItemStack(Items.IRON_LEGGINGS),
-                    new ItemStack(Items.IRON_BOOTS)
+                    new ItemStack(Items.DIAMOND),
+                    new ItemStack(Items.GOLDEN_APPLE),
+                    new ItemStack(Items.GOLD_BLOCK),
+                    new ItemStack(Items.TOTEM_OF_UNDYING),
+                    new ItemStack(Items.ENCHANTED_GOLDEN_APPLE)
                 );
                 int pieces = random.nextInt(2) + 2; // 2-3 pieces
                 for (int i = 0; i < pieces; i++) {
@@ -193,24 +194,24 @@ public class LuckyBlock extends Block {
                 );
                 break;
                 
-            case 11: // Complete set of dyes
+            case 11: // lot's of goodies
                 dropItems(world, pos,
-                    new ItemStack(Items.WHITE_DYE),
-                    new ItemStack(Items.ORANGE_DYE),
-                    new ItemStack(Items.MAGENTA_DYE),
-                    new ItemStack(Items.LIGHT_BLUE_DYE),
-                    new ItemStack(Items.YELLOW_DYE),
-                    new ItemStack(Items.LIME_DYE),
-                    new ItemStack(Items.PINK_DYE),
-                    new ItemStack(Items.GRAY_DYE),
-                    new ItemStack(Items.LIGHT_GRAY_DYE),
-                    new ItemStack(Items.CYAN_DYE),
-                    new ItemStack(Items.PURPLE_DYE),
-                    new ItemStack(Items.BLUE_DYE),
-                    new ItemStack(Items.BROWN_DYE),
-                    new ItemStack(Items.GREEN_DYE),
-                    new ItemStack(Items.RED_DYE),
-                    new ItemStack(Items.BLACK_DYE)
+                    new ItemStack(Items.IRON_HELMET),
+                    new ItemStack(Items.IRON_CHESTPLATE),
+                    new ItemStack(Items.IRON_LEGGINGS),
+                    new ItemStack(Items.IRON_BOOTS),
+                    new ItemStack(Items.IRON_SWORD),
+                    new ItemStack(Items.IRON_SHOVEL),
+                    new ItemStack(Items.IRON_AXE),
+                    new ItemStack(Items.IRON_INGOT, 8),
+                    new ItemStack(Items.IRON_PICKAXE),
+                    new ItemStack(Items.RABBIT),
+                    new ItemStack(Items.RAW_GOLD_BLOCK, 2),
+                    new ItemStack(Items.RAW_IRON_BLOCK, 3),
+                    new ItemStack(Items.RAW_COPPER_BLOCK),
+                    new ItemStack(Items.COOKED_MUTTON, 16),
+                    new ItemStack(Items.COOKED_BEEF, 8),
+                    new ItemStack(Items.COOKED_CHICKEN, 8)
                 );
                 break;
                 
@@ -240,8 +241,10 @@ public class LuckyBlock extends Block {
             case 16: // Redstone equipment
                 dropItems(world, pos,
                     new ItemStack(Items.REDSTONE, random.nextInt(20) + 10),
-                    new ItemStack(Items.REDSTONE_TORCH, random.nextInt(8) + 4),
-                    new ItemStack(Items.REPEATER, random.nextInt(4) + 2)
+                    new ItemStack(Items.LEVER, random.nextInt(8) + 4),
+                    new ItemStack(Items.REPEATER, random.nextInt(4) + 2),
+                    new ItemStack(Items.BIRCH_BUTTON, random.nextInt(4) + 2),
+                    new ItemStack(Items.PALE_OAK_PRESSURE_PLATE, random.nextInt(4) + 2)
                 );
                 break;
                 
@@ -288,10 +291,10 @@ public class LuckyBlock extends Block {
                 List<ItemStack> spawnEggs = List.of(
                     new ItemStack(Items.SHEEP_SPAWN_EGG),
                     new ItemStack(Items.HORSE_SPAWN_EGG),
-                    new ItemStack(Items.LLAMA_SPAWN_EGG),
+                    new ItemStack(Items.VILLAGER_SPAWN_EGG),
                     new ItemStack(Items.WOLF_SPAWN_EGG),
-                    new ItemStack(Items.RABBIT_SPAWN_EGG),
-                    new ItemStack(Items.CAT_SPAWN_EGG)
+                    new ItemStack(Items.VILLAGER_SPAWN_EGG),
+                    new ItemStack(Items.ZOMBIE_VILLAGER_SPAWN_EGG)
                 );
                 dropItems(world, pos, spawnEggs.get(random.nextInt(spawnEggs.size())));
                 break;
@@ -318,20 +321,20 @@ public class LuckyBlock extends Block {
                 
             case 1: // Horse Armor Set
                 dropItems(world, pos,
-                    new ItemStack(Items.LEATHER_HORSE_ARMOR),
+                    new ItemStack(Items.EMERALD_ORE, 3),
                     new ItemStack(Items.IRON_HORSE_ARMOR),
-                    new ItemStack(Items.GOLDEN_HORSE_ARMOR),
-                    new ItemStack(Items.DIAMOND_HORSE_ARMOR)
+                    new ItemStack(Items.MUSHROOM_STEW),
+                    new ItemStack(Items.RABBIT_STEW)
                 );
                 break;
                 
             case 2: // Diamond Tools
                 List<ItemStack> diamondTools = List.of(
-                    new ItemStack(Items.DIAMOND_SWORD),
-                    new ItemStack(Items.DIAMOND_PICKAXE),
-                    new ItemStack(Items.DIAMOND_AXE),
-                    new ItemStack(Items.DIAMOND_SHOVEL),
-                    new ItemStack(Items.DIAMOND_HOE)
+                    new ItemStack(Items.NETHERITE_SWORD),
+                    new ItemStack(Items.NETHERITE_PICKAXE),
+                    new ItemStack(Items.NETHERITE_AXE),
+                    new ItemStack(Items.NETHERITE_SHOVEL),
+                    new ItemStack(Items.STONE_HOE)
                 );
                 int toolCount = random.nextInt(2) + 1; // 1-2 tools
                 for (int i = 0; i < toolCount; i++) {
@@ -339,12 +342,12 @@ public class LuckyBlock extends Block {
                 }
                 break;
                 
-            case 3: // Chainmail Armor
+            case 3: // Very Rare Items
                 List<ItemStack> chainmailArmor = List.of(
-                    new ItemStack(Items.CHAINMAIL_HELMET),
-                    new ItemStack(Items.CHAINMAIL_CHESTPLATE),
-                    new ItemStack(Items.CHAINMAIL_LEGGINGS),
-                    new ItemStack(Items.CHAINMAIL_BOOTS)
+                    new ItemStack(Items.NETHERITE_SCRAP, 3),
+                    new ItemStack(Items.EMERALD_BLOCK, 3),
+                    new ItemStack(Items.NETHERITE_INGOT, 2),
+                    new ItemStack(Items.DIAMOND_BLOCK)
                 );
                 int chainmailPieces = random.nextInt(2) + 2; // 2-3 pieces
                 for (int i = 0; i < chainmailPieces; i++) {
@@ -352,12 +355,12 @@ public class LuckyBlock extends Block {
                 }
                 break;
                 
-            case 4: // Diamond Armor pieces
+            case 4: // Netherite Armor pieces
                 List<ItemStack> diamondArmor = List.of(
-                    new ItemStack(Items.DIAMOND_HELMET),
-                    new ItemStack(Items.DIAMOND_CHESTPLATE),
-                    new ItemStack(Items.DIAMOND_LEGGINGS),
-                    new ItemStack(Items.DIAMOND_BOOTS)
+                    new ItemStack(Items.NETHERITE_HELMET),
+                    new ItemStack(Items.NETHERITE_CHESTPLATE),
+                    new ItemStack(Items.NETHERITE_LEGGINGS),
+                    new ItemStack(Items.NETHERITE_BOOTS)
                 );
                 int diamondPieces = random.nextInt(2) + 1; // 1-2 pieces
                 for (int i = 0; i < diamondPieces; i++) {
@@ -365,15 +368,21 @@ public class LuckyBlock extends Block {
                 }
                 break;
                 
-            case 5: // End Portal Frames
-                dropItems(world, pos, new ItemStack(Items.END_PORTAL_FRAME, random.nextInt(5) + 2));
+            case 5: // Eye of Ender Portal Frames
+                dropItems(world, pos, new ItemStack(Items.ENDER_EYE, random.nextInt(5) + 2));
                 break;
                 
             case 6: // Hero Tools
                 dropItems(world, pos,
                     new ItemStack(Items.DIAMOND_PICKAXE),
                     new ItemStack(Items.DIAMOND_SWORD),
-                    new ItemStack(Items.ENCHANTED_BOOK, random.nextInt(2) + 1)
+                    new ItemStack(Items.DIAMOND_HELMET),
+                    new ItemStack(Items.DIAMOND_CHESTPLATE),
+                    new ItemStack(Items.DIAMOND_LEGGINGS),
+                    new ItemStack(Items.DIAMOND_BOOTS),
+                    new ItemStack(Items.DIAMOND_AXE),
+                    new ItemStack(Items.DIAMOND_SHOVEL),
+                    new ItemStack(Items.SHIELD)
                 );
                 break;
                 
@@ -396,20 +405,8 @@ public class LuckyBlock extends Block {
                     new ItemStack(Items.GOLDEN_APPLE, random.nextInt(3) + 1),
                     new ItemStack(Items.ENCHANTED_GOLDEN_APPLE)
                 );
-                // Add various dyes
-                ItemStack[] dyes = {
-                    new ItemStack(Items.WHITE_DYE), new ItemStack(Items.ORANGE_DYE),
-                    new ItemStack(Items.MAGENTA_DYE), new ItemStack(Items.LIGHT_BLUE_DYE),
-                    new ItemStack(Items.YELLOW_DYE), new ItemStack(Items.LIME_DYE),
-                    new ItemStack(Items.PINK_DYE), new ItemStack(Items.GRAY_DYE),
-                    new ItemStack(Items.LIGHT_GRAY_DYE), new ItemStack(Items.CYAN_DYE),
-                    new ItemStack(Items.PURPLE_DYE), new ItemStack(Items.BLUE_DYE),
-                    new ItemStack(Items.BROWN_DYE), new ItemStack(Items.GREEN_DYE),
-                    new ItemStack(Items.RED_DYE), new ItemStack(Items.BLACK_DYE)
-                };
-                for (int i = 0; i < 5; i++) {
-                    dropItems(world, pos, dyes[random.nextInt(dyes.length)]);
-                }
+                // Also Drop Random 
+                dropItems(world, pos, new ItemStack(Items.OBSIDIAN, random.nextInt(5) + 2));
                 break;
                 
             case 9: // Giant Lucky Block
@@ -419,15 +416,16 @@ public class LuckyBlock extends Block {
                     new ItemStack(Items.GOLD_BLOCK, 3),
                     new ItemStack(Items.IRON_INGOT, 20),
                     new ItemStack(Items.EMERALD, 18),
-                    new ItemStack(Items.CHEST)
+                    new ItemStack(Items.ENDER_CHEST),
+                    new ItemStack(Items.CHEST, 2)
                 );
                 break;
                 
-            case 10: // Rare Items
+            case 10: // BEACON KIT
                 List<ItemStack> rareItems = List.of(
                     new ItemStack(Items.NETHER_STAR),
                     new ItemStack(Items.BEACON),
-                    new ItemStack(Items.DRAGON_EGG)
+                    new ItemStack(Items.COPPER_BLOCK, 43)
                 );
                 dropItems(world, pos, rareItems.get(random.nextInt(rareItems.size())));
                 break;

@@ -1,6 +1,6 @@
 # Simple Lucky Block Mod
 
-A Minecraft Fabric mod for version 1.21.5 that adds a Lucky Block to the game!
+A Minecraft Fabric mod for version 1.21.8 that adds a Lucky Block to the game!
 
 ## Features
 
@@ -10,25 +10,12 @@ A Minecraft Fabric mod for version 1.21.5 that adds a Lucky Block to the game!
 
 ## Loot Table
 
-When you break a Lucky Block, you can get one of these rewards:
-
-- 1-3 Diamonds
-- 1-5 Emeralds  
-- 2-5 Gold Ingots
-- 3-8 Iron Ingots
-- 1 Enchanted Golden Apple
-- 5-12 Experience Bottles
-- 1-2 Netherite Scraps
-- 2-4 Ender Pearls
-- 1 Totem of Undying
-- 5-14 Coal (common drop)
-
-Plus 10-29 experience points!
+(I did not want update this part because of the large changes i made)
 
 ## Installation
 
-1. Make sure you have Minecraft 1.21.5 and Fabric Loader installed
-2. Download Fabric API 0.124.2+1.21.5 or later
+1. Make sure you have Minecraft 1.21.8 and Fabric Loader installed
+2. Download The latest Fabric API for 1.21.8
 3. Place both the Fabric API and this mod's JAR file in your `mods` folder
 4. Launch Minecraft with the Fabric profile
 

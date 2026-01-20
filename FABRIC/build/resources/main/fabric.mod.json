@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "simple_lucky_block",
-	"version": "1.0.0",
+	"version": "1.1.0-dev1",
 	"name": "Simple Lucky Block",
 	"description": "Adds a simple Lucky Block to Minecraft. Break it to get a reward or a punishment.",
 	"authors": [
