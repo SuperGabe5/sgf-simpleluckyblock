@@ -1,44 +1,40 @@
 package com.simpleluckyblock;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ExperienceOrbEntity;
-import net.minecraft.entity.FallingBlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-//import net.minecraft.util.DyeColor;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class LuckyBlock extends Block {
     
-    public LuckyBlock(Settings settings) {
+    public LuckyBlock(Properties settings) {
         super(settings);
     }
 
     @Override
-    public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (!world.isClient && world instanceof ServerWorld serverWorld) {
+    public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+        if (!world.isClientSide && world instanceof ServerLevel serverWorld) {
             generateRandomLoot(serverWorld, pos, player);
         }
         
-        return super.onBreak(world, pos, state, player);
+        return super.playerWillDestroy(world, pos, state, player);
     }
 
-    private void generateRandomLoot(ServerWorld world, BlockPos pos, PlayerEntity player) {
+    private void generateRandomLoot(ServerLevel world, BlockPos pos, Player player) {
         Random random = new Random();
         int chance = random.nextInt(100);
         
@@ -54,9 +50,9 @@ public class LuckyBlock extends Block {
         }
     }
 
-    private void generateUnluckyDrop(ServerWorld world, BlockPos pos, PlayerEntity player, Random random) {
+    private void generateUnluckyDrop(ServerLevel world, BlockPos pos, Player player, Random random) {
         // Play sad villager sound
-        world.playSound(null, pos, SoundEvents.ENTITY_VILLAGER_NO, SoundCategory.BLOCKS, 1.0f, 0.8f);
+        world.playSound(null, pos, SoundEvents.VILLAGER_NO, SoundSource.BLOCKS, 1.0f, 0.8f);
         
         int unluckyType = random.nextInt(6);
         
@@ -66,8 +62,8 @@ public class LuckyBlock extends Block {
                 break;
                 
             case 1: // Explosion (20%)
-                world.createExplosion(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 
-                    2.5f, World.ExplosionSourceType.BLOCK);
+                world.explode(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 
+                    2.5f, Level.ExplosionInteraction.BLOCK);
                 break;
                 
             case 2: // Rotten Flesh and Useless Tools (20%)
@@ -96,9 +92,9 @@ public class LuckyBlock extends Block {
         }
     }
 
-    private void generateNormalDrop(ServerWorld world, BlockPos pos, PlayerEntity player, Random random) {
+    private void generateNormalDrop(ServerLevel world, BlockPos pos, Player player, Random random) {
         // Play level up sound
-        world.playSound(null, pos, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.BLOCKS, 1.0f, 1.0f);
+        world.playSound(null, pos, SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1.0f, 1.0f);
         
         int normalType = random.nextInt(25);
         
@@ -182,7 +178,7 @@ public class LuckyBlock extends Block {
                 
             case 9: // Custom named clock
                 ItemStack clock = new ItemStack(Items.CLOCK);
-                clock.set(net.minecraft.component.DataComponentTypes.CUSTOM_NAME, Text.literal("Lucky Clock"));
+                clock.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME, Component.literal("Lucky Clock"));
                 dropItems(world, pos, clock);
                 break;
                 
@@ -301,9 +297,9 @@ public class LuckyBlock extends Block {
         }
     }
 
-    private void generateVeryLuckyDrop(ServerWorld world, BlockPos pos, PlayerEntity player, Random random) {
+    private void generateVeryLuckyDrop(ServerLevel world, BlockPos pos, Player player, Random random) {
         // Play celebration sound and spawn totem particles
-        world.playSound(null, pos, SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.BLOCKS, 1.0f, 1.0f);
+        world.playSound(null, pos, SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundSource.BLOCKS, 1.0f, 1.0f);
         spawnTotemParticles(world, pos);
         
         int luckyType = random.nextInt(13);
@@ -445,45 +441,45 @@ public class LuckyBlock extends Block {
         }
     }
 
-    private void dropItems(ServerWorld world, BlockPos pos, ItemStack... items) {
+    private void dropItems(ServerLevel world, BlockPos pos, ItemStack... items) {
         for (ItemStack item : items) {
-            Block.dropStack(world, pos, item);
+            Block.popResource(world, pos, item);
         }
     }
 
-    private void createFallingBlock(ServerWorld world, BlockPos pos, Block block, net.minecraft.particle.ParticleEffect particle) {
-        FallingBlockEntity fallingBlock = FallingBlockEntity.spawnFromBlock(world, pos.up(3), block.getDefaultState());
+    private void createFallingBlock(ServerLevel world, BlockPos pos, Block block, net.minecraft.core.particles.ParticleOptions particle) {
+        FallingBlockEntity fallingBlock = FallingBlockEntity.fall(world, pos.above(3), block.defaultBlockState());
         
         // Add particle effects
         for (int i = 0; i < 20; i++) {
-            world.spawnParticles(particle, 
+            world.sendParticles(particle, 
                 pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5,
                 1, 0.5, 0.5, 0.5, 0.1);
         }
     }
 
-    private void spawnTotemParticles(ServerWorld world, BlockPos pos) {
+    private void spawnTotemParticles(ServerLevel world, BlockPos pos) {
         for (int i = 0; i < 50; i++) {
-            world.spawnParticles(ParticleTypes.TOTEM_OF_UNDYING,
+            world.sendParticles(ParticleTypes.TOTEM_OF_UNDYING,
                 pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5,
                 1, 1.0, 1.0, 1.0, 0.2);
         }
     }
 
-    private void createExperienceShower(ServerWorld world, BlockPos pos, Random random) {
+    private void createExperienceShower(ServerLevel world, BlockPos pos, Random random) {
         // Create multiple experience orbs with special effects
         for (int i = 0; i < 20; i++) {
-            ExperienceOrbEntity orb = new ExperienceOrbEntity(world, 
+            ExperienceOrb orb = new ExperienceOrb(world, 
                 pos.getX() + 0.5 + (random.nextDouble() - 0.5) * 2,
                 pos.getY() + 2 + random.nextDouble() * 3,
                 pos.getZ() + 0.5 + (random.nextDouble() - 0.5) * 2,
                 random.nextInt(10) + 5);
-            world.spawnEntity(orb);
+            world.addFreshEntity(orb);
         }
         
         // Add special particle effects
         for (int i = 0; i < 100; i++) {
-            world.spawnParticles(ParticleTypes.ENCHANT,
+            world.sendParticles(ParticleTypes.ENCHANT,
                 pos.getX() + 0.5, pos.getY() + 2, pos.getZ() + 0.5,
                 1, 2.0, 2.0, 2.0, 0.3);
         }
