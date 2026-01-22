@@ -5,17 +5,16 @@ import com.simpleluckyblock.worldgen.ModWorldGeneration;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import net.minecraft.SharedConstants;
-import net.minecraft.Bootstrap;
-
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.Bootstrap;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +27,7 @@ public class SimpleLuckyBlock implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	// Creative tab for the mod
-	public static final RegistryKey<ItemGroup> SIMPLE_LUCKY_BLOCK_GROUP = RegistryKey.of(RegistryKeys.ITEM_GROUP, Identifier.of(MOD_ID, "simple_lucky_block"));
+	public static final ResourceKey<CreativeModeTab> SIMPLE_LUCKY_BLOCK_GROUP = ResourceKey.create(Registries.CREATIVE_MODE_TAB, Identifier.fromNamespaceAndPath(MOD_ID, "simple_lucky_block"));
 	
 	// Flag to avoid initializing Bootstrap multiple times
 	private static boolean isBootstrapInitialized = false;
@@ -41,8 +40,8 @@ public class SimpleLuckyBlock implements ModInitializer {
 		if (!isBootstrapInitialized) {
 			try {
 				LOGGER.info("Initializing Bootstrap for MC 1.21.5");
-				SharedConstants.createGameVersion();
-				Bootstrap.initialize();
+				SharedConstants.tryDetectVersion();
+				Bootstrap.bootStrap();
 				isBootstrapInitialized = true;
 				LOGGER.info("Bootstrap initialization successful");
 			} catch (Exception e) {
@@ -73,14 +72,14 @@ public class SimpleLuckyBlock implements ModInitializer {
 		ModWorldGeneration.registerWorldGeneration();
 
 		// Register the creative tab
-		Registry.register(Registries.ITEM_GROUP, SIMPLE_LUCKY_BLOCK_GROUP, FabricItemGroup.builder()
+		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, SIMPLE_LUCKY_BLOCK_GROUP, FabricItemGroup.builder()
 				.icon(() -> new ItemStack(ModBlocks.LUCKY_BLOCK))
-				.displayName(Text.translatable("itemGroup.simple_lucky_block.simple_lucky_block"))
+				.title(Component.translatable("itemGroup.simple_lucky_block.simple_lucky_block"))
 				.build());
 
 		// Add items to the creative tab
 		ItemGroupEvents.modifyEntriesEvent(SIMPLE_LUCKY_BLOCK_GROUP).register(entries -> {
-			entries.add(ModBlocks.LUCKY_BLOCK);
+			entries.accept(ModBlocks.LUCKY_BLOCK);
 		});
 
 		LOGGER.info("Simple Lucky Block mod initialized successfully!");
